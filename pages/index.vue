@@ -12,20 +12,20 @@
                     <input type="text" placeholder="Введите наименование товара">
 
                     <p>Описание товара</p>
-                    <textarea name="" id="" cols="30" rows="10" placeholder="Введите описание товара"></textarea>
+                    <textarea name="" cols="30" rows="10" placeholder="Введите описание товара"></textarea>
 
                     <p>Ссылка на изображение товара</p>
-                    <input type="text" name="" id="" placeholder="Введите ссылку">
+                    <input type="text" name="" placeholder="Введите ссылку">
 
                     <p>Цена товара</p>
-                    <input type="number" name="" id="" placeholder="Введите цену">
+                    <input type="number" name="" placeholder="Введите цену">
                 </form>
                 <button>Добавить товар</button>
             </div>
 
             <div class="cards--container">
                 <div class="card">
-                    <img :src="this.val" alt="">
+                    <img :src="val" alt="">
                     <div class="card--data">
                         <p>Наименование товара</p>
                         <p>Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк</p>
@@ -127,7 +127,7 @@ body {
             background: #EEEEEE;
             border-radius: 10px;
             border: none;
-            // padding: 10px 95px 11px 96px;
+            padding: 10px 0px 11px 0px;
             color: #B4B4B4;
             cursor: pointer;
             font-weight: 600;
@@ -200,10 +200,19 @@ body {
             border-radius: 4px;
             width: 332px;
             height: 423px;
+            position: relative;
         }
+        // add delete button
+        // .card:hover::after {
+        //     content: url('@/assets/delete-btn.svg');
+        //     position: absolute;
+        //     top: 0;
+        //     right: -10px;
+        // }
         .card img {
             max-width: 332px;
             max-height: 320px;
+            border-radius: 4px 4px 0px 0px;
         }
         .card--data {
             padding: 16px;
