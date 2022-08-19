@@ -36,7 +36,7 @@
                         <p :style="valid_styles.img.p">Поле является обязательным</p>
                     </div>
 
-                    <div>
+                    <div class="form--inp">
                         <p>Цена товара</p>
                         <input
                             v-model="price"
@@ -48,28 +48,43 @@
                     </div>
                 </form>
                 <button
-                    :style="btn.style"
-                    :disabled='!btn.disabled'
+                    v-if="title === '' || img === '' || price === ''"
+                    :disabled='true'
+                    style="transition: .5s;"
+                >
+                    Добавить товар
+                </button>
+                <button
+                    v-else
+                    type="submit"
+                    style="
+                        color: #FFFFFF;
+                        transition: .5s;
+                        background: #7BAE73;
+                    "
                     @click="addCard"
                 >
                     Добавить товар
                 </button>
             </div>
 
-            <!-- <div 
-                class="cards--container"
-                v-for="i in data_cards"
-                :key="i.index"
-            >
-                <div class="card">
-                    <img :src="i.img" alt="">
-                    <div class="card--data">
-                        <p>{{i.title}}</p>
-                        <p>{{i.about}}</p>
-                        <p>{{i.price}} руб.</p>
+            <div class="cards--container-main">
+                <div 
+                    v-for="i in data_cards"
+                    :key="i.index"
+                    class="cards--container"
+                >
+                    <div class="card">
+                        <img :src="i.img" alt="Изображение отсутствует">
+                        <div class="card--data">
+                            <p>{{i.title}}</p>
+                            <p>{{i.about}}</p>
+                            <p>{{i.price}} руб.</p>
+                        </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
+
         </div>
     </div>
 </template>
@@ -79,24 +94,27 @@ export default {
     name: 'IndexPage',
     data() {
         return {
+            style_inp: {
+                display: {
+                    'display': 'block',
+                    'color': '#FF8484',
+                    'padding-top': '0px',
+                    'position': 'absolute',
+                    'bottom': '0',
+                },
+                display_none: {'display': 'none'},
+                border: {'border': '1px solid #FF8484'},
+                border_none: {'border': 'none'}
+            },
             img: '',
             title: '',
             about: '',
             price: '',
             data_cards: [],
             valid_styles: {
-                img: {
-                    t: {},
-                    p: {'display': 'none'}
-                },
-                title: {
-                    t: {},
-                    p: {'display': 'none'}
-                },
-                price: {
-                    t: {},
-                    p: {'display': 'none'}
-                },
+                img: { t: {}, p: {'display': 'none'} },
+                title: { t: {}, p: {'display': 'none'} },
+                price: { t: {}, p: {'display': 'none'} },
             },
             btn: {
                 style: {},
@@ -106,58 +124,32 @@ export default {
     },
     watch: {
         title(val) {
-            this.valid_styles.title.t = val === '' ? {'border': '1px solid #FF8484'} : {'border': 'none'}
-            this.valid_styles.title.p = val === '' ? {
-                'display': 'block',
-                'color': '#FF8484',
-                'padding-top': '0px',
-                'position': 'absolute',
-                'bottom': '0'
-            } : {
-                'display': 'none'
-            }
+            this.valid_styles.title.t = val === '' ? this.style_inp.border : this.style_inp.border_none
+            this.valid_styles.title.p = val === '' ? this.style_inp.display : this.style_inp.display_none
         },
         img(val) {
-            this.valid_styles.img.t = val === '' ? {'border': '1px solid #FF8484'} : {'border': 'none'}
-            this.valid_styles.img.p = val === '' ? {
-                'display': 'block',
-                'color': '#FF8484',
-                'padding-top': '0px',
-                'position': 'absolute',
-                'bottom': '0'
-            } : {
-                'display': 'none'
-            }
+            this.valid_styles.img.t = val === '' ? this.style_inp.border : this.style_inp.border_none
+            this.valid_styles.img.p = val === '' ? this.style_inp.display : this.style_inp.display_none
+
         },
         price(val) {
-            this.valid_styles.price = val === '' ? {'border': '1px solid #FF8484'} : {'border': 'none'}
-        }
+            this.valid_styles.price = val === '' ? this.style_inp.border : this.style_inp.border_none
+            this.valid_styles.price.p = val === '' ? this.style_inp.display : this.style_inp.display_none
+        },
     },
     mounted() {
         console.clear()
     },
     methods: {
         addCard() {
-            // const data = {
-            //     img: this.img,
-            //     title: this.title,
-            //     about: this.about,
-            //     price: this.price,
-            // }
-            // if (!data) {
-            //     console.log('1')
-            // } else {
-            //     console.log('2')
-            // }
-            // console.log(data.title)
-            // this.dd = {'display': 'block', 'color': 'red', 'transition': 'all 0.5s ease-out'}
-            // this.data_cards.push(data)
-            // this.valid_styles = {"color": "red"}
+            const data = {
+                img: this.img,
+                title: this.title,
+                about: this.about,
+                price: this.price,
+            }
+            this.data_cards.push(data)
         },
-        // valid(val) {
-        //     console.log(val.target.value)
-        // },
-        
     }
 }
 </script>
@@ -216,13 +208,13 @@ body {
     .form_cards--container {
         display: flex;
         margin-top: 16px;
-        max-width: 440px;
 
         .form--container {
             background: $white;
             box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
             border-radius: 4px;
             padding: 24px;
+            max-height: 440px;
         }
         .form--container button {
             width: 100%;
@@ -246,7 +238,7 @@ body {
             line-height: 13px;
             letter-spacing: -0.02em;
             font-style: normal;
-            position: relative; 
+            position: relative;
         }
         form p:nth-child(1)::after,
         form p:nth-child(5)::after,
@@ -299,11 +291,12 @@ body {
         }
         textarea::-webkit-input-placeholder { color: $gray; }
 
-        .cards--container {
+        .cards--container-main {
             display: flex;
             flex-wrap: wrap;
-            max-width: 1028px;
-            margin-left: 16px;
+        }
+        .cards--container {
+            position: relative;
         }
         .card {
             background: #FFFEFB;
@@ -312,6 +305,7 @@ body {
             width: 332px;
             height: 423px;
             position: relative;
+            margin: 0px 0px 16px 16px;
         }
         // add delete button
         // .card:hover::after {
@@ -321,13 +315,12 @@ body {
         //     right: -10px;
         // }
         .card img {
-            max-width: 332px;
-            max-height: 320px;
+            width: 332px;
+            max-height: 200px;
             border-radius: 4px 4px 0px 0px;
         }
         .card--data {
             padding: 16px;
-            position: relative;
         }
         .card--data p:nth-child(1) {
             font-style: normal;
@@ -345,9 +338,8 @@ body {
             color: #3F3F3F;
         }
         .card--data p:nth-child(3) {
-            // margin-top: 32px;
-            bottom: 16px;
             position: absolute;
+            bottom: 16px;
             font-style: normal;
             font-weight: 600;
             font-size: 24px;
