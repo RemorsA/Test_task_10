@@ -127,7 +127,7 @@ body {
             background: #EEEEEE;
             border-radius: 10px;
             border: none;
-            // padding: 10px 95px 11px 96px;
+            padding: 10px 0px 11px 0px;
             color: #B4B4B4;
             cursor: pointer;
             font-weight: 600;
@@ -200,10 +200,19 @@ body {
             border-radius: 4px;
             width: 332px;
             height: 423px;
+            position: relative;
         }
+        // add delete button
+        // .card:hover::after {
+        //     content: url('@/assets/delete-btn.svg');
+        //     position: absolute;
+        //     top: 0;
+        //     right: -10px;
+        // }
         .card img {
             max-width: 332px;
             max-height: 320px;
+            border-radius: 4px 4px 0px 0px;
         }
         .card--data {
             padding: 16px;
