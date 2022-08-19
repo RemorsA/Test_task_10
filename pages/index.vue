@@ -8,31 +8,68 @@
         <div class="form_cards--container">
             <div class="form--container">
                 <form action="">
-                    <p>Наименование товара</p>
-                    <input type="text" placeholder="Введите наименование товара">
+                    <div class="form--inp">
+                        <p>Наименование товара</p>
+                        <input
+                            v-model="title"
+                            type="text"
+                            placeholder="Введите наименование товара"
+                            :style="valid_styles.title.t"
+                        >
+                        <p :style="valid_styles.title.p">Поле является обязательным</p>
+                    </div>
 
                     <p>Описание товара</p>
-                    <textarea name="" cols="30" rows="10" placeholder="Введите описание товара"></textarea>
+                    <textarea
+                        v-model="about"
+                        placeholder="Введите описание товара"
+                    ></textarea>
 
-                    <p>Ссылка на изображение товара</p>
-                    <input type="text" name="" placeholder="Введите ссылку">
+                    <div class="form--inp">
+                        <p>Ссылка на изображение товара</p>
+                        <input
+                            v-model="img"
+                            type="text"
+                            placeholder="Введите ссылку"
+                            :style="valid_styles.img.t"
+                        >
+                        <p :style="valid_styles.img.p">Поле является обязательным</p>
+                    </div>
 
-                    <p>Цена товара</p>
-                    <input type="number" name="" placeholder="Введите цену">
+                    <div>
+                        <p>Цена товара</p>
+                        <input
+                            v-model="price"
+                            type="number"
+                            placeholder="Введите цену"
+                            :style="valid_styles.price"
+                        >
+                        <p :style="valid_styles.price.p">Поле является обязательным</p>
+                    </div>
                 </form>
-                <button>Добавить товар</button>
+                <button
+                    :style="btn.style"
+                    :disabled='!btn.disabled'
+                    @click="addCard"
+                >
+                    Добавить товар
+                </button>
             </div>
 
-            <div class="cards--container">
+            <!-- <div 
+                class="cards--container"
+                v-for="i in data_cards"
+                :key="i.index"
+            >
                 <div class="card">
-                    <img :src="val" alt="">
+                    <img :src="i.img" alt="">
                     <div class="card--data">
-                        <p>Наименование товара</p>
-                        <p>Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк</p>
-                        <p>10 000 руб.</p>
+                        <p>{{i.title}}</p>
+                        <p>{{i.about}}</p>
+                        <p>{{i.price}} руб.</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -42,18 +79,85 @@ export default {
     name: 'IndexPage',
     data() {
         return {
-        val: 'http://sun9-3.userapi.com/s/v1/if1/y72Ov_XZPLyuIeAQsCKjkYj31CV4h3ULfIBf755hFxDLRpqvvyxv0Rcs-RDqK0dOBufGqVX5.jpg?size=200x235&quality=96&crop=0,0,500,588&ava=1',
-        ww: "dwawww",
+            img: '',
+            title: '',
+            about: '',
+            price: '',
+            data_cards: [],
+            valid_styles: {
+                img: {
+                    t: {},
+                    p: {'display': 'none'}
+                },
+                title: {
+                    t: {},
+                    p: {'display': 'none'}
+                },
+                price: {
+                    t: {},
+                    p: {'display': 'none'}
+                },
+            },
+            btn: {
+                style: {},
+                disabled: false
+            },
         }
     },
-    methods: {
-        dd() {
-        const a = '1'
-        console.log(a)
+    watch: {
+        title(val) {
+            this.valid_styles.title.t = val === '' ? {'border': '1px solid #FF8484'} : {'border': 'none'}
+            this.valid_styles.title.p = val === '' ? {
+                'display': 'block',
+                'color': '#FF8484',
+                'padding-top': '0px',
+                'position': 'absolute',
+                'bottom': '0'
+            } : {
+                'display': 'none'
+            }
+        },
+        img(val) {
+            this.valid_styles.img.t = val === '' ? {'border': '1px solid #FF8484'} : {'border': 'none'}
+            this.valid_styles.img.p = val === '' ? {
+                'display': 'block',
+                'color': '#FF8484',
+                'padding-top': '0px',
+                'position': 'absolute',
+                'bottom': '0'
+            } : {
+                'display': 'none'
+            }
+        },
+        price(val) {
+            this.valid_styles.price = val === '' ? {'border': '1px solid #FF8484'} : {'border': 'none'}
         }
     },
     mounted() {
         console.clear()
+    },
+    methods: {
+        addCard() {
+            // const data = {
+            //     img: this.img,
+            //     title: this.title,
+            //     about: this.about,
+            //     price: this.price,
+            // }
+            // if (!data) {
+            //     console.log('1')
+            // } else {
+            //     console.log('2')
+            // }
+            // console.log(data.title)
+            // this.dd = {'display': 'block', 'color': 'red', 'transition': 'all 0.5s ease-out'}
+            // this.data_cards.push(data)
+            // this.valid_styles = {"color": "red"}
+        },
+        // valid(val) {
+        //     console.log(val.target.value)
+        // },
+        
     }
 }
 </script>
@@ -106,9 +210,7 @@ body {
             line-height: 15px;
             color: $gray;
         }
-        .header--btn img {
-            padding-left: 5px;
-        }
+        .header--btn img { padding-left: 5px; }
     }
 
     .form_cards--container {
@@ -144,7 +246,21 @@ body {
             line-height: 13px;
             letter-spacing: -0.02em;
             font-style: normal;
+            position: relative; 
         }
+        form p:nth-child(1)::after,
+        form p:nth-child(5)::after,
+        form p:nth-child(7)::after {
+            content: url('@/assets/required.svg');
+            position: absolute;
+            bottom: 4px;
+            margin-left: 1px;
+        }
+
+        .form--inp {
+            position: relative;
+        }
+
         input {
             border: none;
             background: #FFFEFB;
@@ -161,12 +277,9 @@ body {
             line-height: 13px;
             margin-bottom: 16px;
         }
-        input::-webkit-input-placeholder {
-            color: $gray;
-        }
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-        }
+        input::-webkit-input-placeholder { color: $gray; }
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
         textarea {
             border: none;
             background: #FFFEFB;
@@ -184,14 +297,12 @@ body {
             margin-bottom: 16px;
             resize: none;
         }
-        textarea::-webkit-input-placeholder {
-            color: $gray;
-        }
+        textarea::-webkit-input-placeholder { color: $gray; }
 
         .cards--container {
-            max-width: 1028px;
             display: flex;
             flex-wrap: wrap;
+            max-width: 1028px;
             margin-left: 16px;
         }
         .card {
@@ -216,6 +327,7 @@ body {
         }
         .card--data {
             padding: 16px;
+            position: relative;
         }
         .card--data p:nth-child(1) {
             font-style: normal;
@@ -234,6 +346,8 @@ body {
         }
         .card--data p:nth-child(3) {
             // margin-top: 32px;
+            bottom: 16px;
+            position: absolute;
             font-style: normal;
             font-weight: 600;
             font-size: 24px;
