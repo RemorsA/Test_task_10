@@ -12,20 +12,20 @@
                     <input type="text" placeholder="Введите наименование товара">
 
                     <p>Описание товара</p>
-                    <textarea name="" id="" cols="30" rows="10" placeholder="Введите описание товара"></textarea>
+                    <textarea name="" cols="30" rows="10" placeholder="Введите описание товара"></textarea>
 
                     <p>Ссылка на изображение товара</p>
-                    <input type="text" name="" id="" placeholder="Введите ссылку">
+                    <input type="text" name="" placeholder="Введите ссылку">
 
                     <p>Цена товара</p>
-                    <input type="number" name="" id="" placeholder="Введите цену">
+                    <input type="number" name="" placeholder="Введите цену">
                 </form>
                 <button>Добавить товар</button>
             </div>
 
             <div class="cards--container">
                 <div class="card">
-                    <img :src="this.val" alt="">
+                    <img :src="val" alt="">
                     <div class="card--data">
                         <p>Наименование товара</p>
                         <p>Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк</p>
