@@ -70,12 +70,19 @@
 
             <div class="cards--container-main">
                 <div 
-                    v-for="i in data_cards"
-                    :key="i.index"
+                    v-for="(i, index) in data_cards"
+                    :key="i.id"
                     class="cards--container"
                 >
+                    <img 
+                        src="@/assets/delete-btn.svg" 
+                        class="card_delete"
+                        @click="deletCard(index)"
+                    >
                     <div class="card">
-                        <img :src="i.img" alt="Изображение отсутствует">
+                        <div class="card--img">
+                            <img :src="i.img">
+                        </div>
                         <div class="card--data">
                             <p>{{i.title}}</p>
                             <p>{{i.about}}</p>
@@ -84,7 +91,10 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div v-if="alert === true" class="succes_add">
+            <p>Товар успешно добавлен</p>
         </div>
     </div>
 </template>
@@ -120,6 +130,7 @@ export default {
                 style: {},
                 disabled: false
             },
+            alert: false
         }
     },
     watch: {
@@ -134,22 +145,43 @@ export default {
         },
         price(val) {
             this.valid_styles.price = val === '' ? this.style_inp.border : this.style_inp.border_none
-            this.valid_styles.price.p = val === '' ? this.style_inp.display : this.style_inp.display_none
+            this.valid_styles.price.p = val === '' ? this.style_inp.display : this.style_inp.display_none 
         },
     },
     mounted() {
         console.clear()
+        const parse = JSON.parse(localStorage.getItem('cards'))
+        if (parse !== null) {
+            this.data_cards = parse
+        }
     },
     methods: {
         addCard() {
             const data = {
+                id: Math.floor(Math.random() * 9999),
                 img: this.img,
                 title: this.title,
                 about: this.about,
                 price: this.price,
             }
+
+            if (!data.img.match(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/i)) {
+                data.img = 'https://www.kerstinbruns.es/wp-content/themes/realestate-7/images/no-image.png'
+            }
+            data.price = data.price.replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, '$& ')
+
             this.data_cards.push(data)
+            localStorage.setItem('cards', JSON.stringify(this.data_cards))
+            this.alert = true
+            setTimeout(() => {
+                this.alert = false
+            }, 3000)
+            // https://grandgames.net/img/upload/fee2a439e342333522a1ccd30f74be63.jpg
         },
+        deletCard(index) {
+            this.data_cards.splice(index, 1)
+            localStorage.setItem('cards', JSON.stringify(this.data_cards))
+        }
     }
 }
 </script>
@@ -228,6 +260,7 @@ body {
             font-size: 12px;
             line-height: 15px;
         }
+
         form p {
             text-align: start;
             color: #49485E;
@@ -307,16 +340,20 @@ body {
             position: relative;
             margin: 0px 0px 16px 16px;
         }
-        // add delete button
-        // .card:hover::after {
-        //     content: url('@/assets/delete-btn.svg');
-        //     position: absolute;
-        //     top: 0;
-        //     right: -10px;
-        // }
-        .card img {
+        .card_delete {
+            position: absolute;
+            top: -10px;
+            right: -20px;
+            z-index: 1;
+            cursor: pointer;
+        }
+        .card--img {
             width: 332px;
-            max-height: 200px;
+            height: 200px;
+        }
+        .card img {
+            width: 100%;
+            height: 100%;
             border-radius: 4px 4px 0px 0px;
         }
         .card--data {
@@ -346,6 +383,23 @@ body {
             line-height: 30px;
             color: #3F3F3F;
         }
+    }
+
+    .succes_add {
+        width: 300px;
+        height: 40px;
+        background: #7BAE73;
+        border-radius: 20px;
+        position: absolute;
+        top: 20px;
+        right: 50%;
+        left: 50%;
+        transition: .5s;
+    }
+    .succes_add p {
+        padding: 7px 0px 5px 0px;
+        text-align: center;
+        color: #FFFFFF;
     }
 }
 </style>
