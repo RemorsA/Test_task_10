@@ -16,14 +16,14 @@
         <div class="body--container">
             <div class="form--container">
                 <div class="form--input">
-                    <p>Наименование товара</p>
+                    <p class="required">Наименование товара</p>
                     <input
                         v-model="title"
                         type="text"
                         placeholder="Введите наименование товара"
-                        :style="valid_styles.title.t"
+                        :class="valid_form.form"
                     >
-                    <p :style="valid_styles.title.p">Поле является обязательным</p>
+                    <p :class="valid_form.txt">Поле является обязательным</p>
                 </div>
                 <p>Описание товара</p>
                 <textarea
@@ -31,36 +31,30 @@
                     placeholder="Введите описание товара"
                 ></textarea>
                 <div class="form--input">
-                    <p>Ссылка на изображение товара</p>
+                    <p class="required">Ссылка на изображение товара</p>
                     <input
                         v-model="img"
                         type="text"
                         placeholder="Введите ссылку"
-                        :style="valid_styles.img.t"
+                        :class="valid_form.form"
                     >
-                    <p :style="valid_styles.img.p">Поле является обязательным</p>
+                    <p :class="valid_form.txt">Поле является обязательным</p>
                 </div>
                 <div class="form--input">
-                    <p>Цена товара</p>
+                    <p class="required">Цена товара</p>
                     <input
                         v-model="price"
                         type="number"
                         placeholder="Введите цену"
-                        :style="valid_styles.price"
+                        :class="valid_form.form"
                     >
-                    <p :style="valid_styles.price.p">Поле является обязательным</p>
+                    <p :class="valid_form.txt">Поле является обязательным</p>
                 </div>
                 <button
-                    v-if="title === '' || img === '' || price === ''"
-                    class="form--btn"
-                    :disabled='true'
-                >
-                    Добавить товар
-                </button>
-                <button
-                    v-else
                     type="submit"
-                    class="form--btn btn-ch"
+                    :disabled='title && img && price ? false : true'
+                    :class="{'ww': title && img && price}"
+                    class="form--btn"
                     @click="addCard"
                 >
                     Добавить товар
@@ -73,11 +67,12 @@
                     :key="i.id"
                     class="card--container"
                     @mouseenter='showDeleteBtn(index)'
-                    @mouseleave ='showDeleteBtn(index)'
+                    @mouseleave='showDeleteBtn()'
                 >
-                    <img 
+                    <img
                         src="@/assets/delete-btn.svg"
                         class="card_delete"
+                        :class="card.index === index ? card.class_show : card.class_hidden"
                         @click="deletCard(index)"
                     >
                     <img :src="i.img" class="card--img">
@@ -90,7 +85,7 @@
             </div>
         </div>
 
-        <div v-show="alert" class="succes_add">
+        <div :class="succes_add">
             <p>Товар успешно добавлен</p>
         </div>
 
@@ -104,51 +99,36 @@ export default {
     name: 'IndexPage',
     data() {
         return {
-            style_inp: {
-                display: {
-                    'display': 'block',
-                    'color': '#FF8484',
-                    'padding-top': '0px',
-                    'position': 'absolute',
-                    'bottom': '0',
-                },
-                display_none: {'display': 'none'},
-                border: {'border': '1px solid #FF8484'},
-                border_none: {'border': 'none'}
-            },
+            valid_form: { form: '', txt: '' },
             img: '',
             title: '',
             about: '',
             price: '',
             data_cards: [],
-            valid_styles: {
-                img: { t: {}, p: {'display': 'none'} },
-                title: { t: {}, p: {'display': 'none'} },
-                price: { t: {}, p: {'display': 'none'} },
-            },
-            btn: {
-                style: {},
-                disabled: false
-            },
             alert: false,
             sort_mod: false,
             tableLoad: false,
-            show_delete: null
+            show_delete: null,
+            succes_add: '',
+            card: {
+                index: null,
+                class_show: 'show',
+                class_hidden: 'hidden'
+            }
         }
     },
     watch: {
         title(val) {
-            this.valid_styles.title.t = val === '' ? this.style_inp.border : this.style_inp.border_none
-            this.valid_styles.title.p = val === '' ? this.style_inp.display : this.style_inp.display_none
+            this.valid_form.form = val === '' ? 'not_valid-form' : ''
+            this.valid_form.txt = val === '' ? 'not_valid-form-txt' : 'valid-form-txt'
         },
         img(val) {
-            this.valid_styles.img.t = val === '' ? this.style_inp.border : this.style_inp.border_none
-            this.valid_styles.img.p = val === '' ? this.style_inp.display : this.style_inp.display_none
-
+            this.valid_form.form = val === '' ? 'not_valid-form' : ''
+            this.valid_form.txt = val === '' ? 'not_valid-form-txt' : 'valid-form-txt'
         },
         price(val) {
-            this.valid_styles.price = val === '' ? this.style_inp.border : this.style_inp.border_none
-            this.valid_styles.price.p = val === '' ? this.style_inp.display : this.style_inp.display_none 
+            this.valid_form.form = val === '' ? 'not_valid-form' : ''
+            this.valid_form.txt = val === '' ? 'not_valid-form-txt' : 'valid-form-txt'
         },
     },
     mounted() {
@@ -160,7 +140,8 @@ export default {
         setTimeout(() => {
             this.tableLoad = true
         }, 1000)
-        
+        this.valid_form.txt = 'valid-form-txt'
+        this.succes_add = 'succes_add-hidden'
     },
     methods: {
         addCard() {
@@ -180,17 +161,16 @@ export default {
             this.data_cards.push(data)
             localStorage.setItem('cards', JSON.stringify(this.data_cards))
 
-            this.alert = true
+            this.succes_add = 'succes_add'
             setTimeout(() => {
-                this.alert = false
-            }, 3000)
+                this.succes_add = 'succes_add-hidden'
+            }, 2000)
         },
-        
         deletCard(index) {
             this.data_cards.splice(index, 1)
             localStorage.setItem('cards', JSON.stringify(this.data_cards))
         },
-        sortOpen() {
+        sortOpen(val) {
             if (this.sort_mod === false) this.sort_mod = true
             else this.sort_mod = false
         },
@@ -210,12 +190,8 @@ export default {
             }, 1000)
         },
         showDeleteBtn(val) {
-            console.log(val)
-            if (this.showDelete) this.showDelete = false
-            else this.showDelete = val
-            return val
-            // console.warn(this.showDelete)
-        }
+            this.card.index = val
+        },
     }
 }
 </script>
@@ -231,6 +207,18 @@ $pink: #ff8484
 
 $boxshadowheader: 0px 2px 5px rgba(0, 0, 0, 0.1)
 $fontfamily: 'Source Sans Pro'
+
+.not_valid-form
+    border: 2px solid #FF8484
+    transition: .7s
+    margin-bottom: 20px
+.not_valid-form-txt
+    color: #FF8484
+    transition: .7s
+    position: absolute
+    top: 57px
+.valid-form-txt
+    visibility: hidden
 
 .contaiener
     max-width: 1440px
@@ -300,6 +288,10 @@ $fontfamily: 'Source Sans Pro'
             min-width: 332px
             .form--input
                 position: relative
+                .required::after
+                    content: url('@/assets/required.svg')
+                    position: absolute
+                    top: -10px
         .cards--container
             display: flex
             flex-wrap: wrap
@@ -317,6 +309,10 @@ $fontfamily: 'Source Sans Pro'
                     top: -10px
                     right: -20px
                     z-index: 1
+                .show
+                    visibility: visible
+                .hidden
+                    visibility: hidden
                 .card--img
                     width: 332px
                     height: 200px
@@ -349,13 +345,21 @@ $fontfamily: 'Source Sans Pro'
             width: 284px
             height: 36px
             border-radius: 10px
+            background: #7BAE73
+            border: none
+            cursor: pointer
+            color: $white
+        .form--btn:hover
+            color: $graphite
+        .form--btn:disabled
+            transition: .5s
+            width: 284px
+            height: 36px
+            border-radius: 10px
             background: #EEEEEE
             border: none
             cursor: pointer
-        .btn-ch
-            color: #FFFFFF
-            transition: .5s
-            background: #7BAE73
+            color: $gray
 
 input
     border: none
@@ -371,7 +375,7 @@ input
     font-weight: 400
     font-size: 10px
     line-height: 13px
-    margin: 4px 0px 16px 0px
+    margin: 4px 0px 0px 0px
 input::-webkit-input-placeholder
     color: $gray
 input[type="number"]::-webkit-inner-spin-button 
@@ -410,6 +414,8 @@ textarea::-webkit-input-placeholder
     padding: 7px 0px 5px 0px
     text-align: center
     color: #FFFFFF
+.succes_add-hidden
+    visibility: hidden
 
 .spin
     position: absolute
