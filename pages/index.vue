@@ -53,7 +53,6 @@
                 <button
                     type="submit"
                     :disabled='title && img && price ? false : true'
-                    :class="{'ww': title && img && price}"
                     class="form--btn"
                     @click="addCard"
                 >
@@ -196,24 +195,29 @@ export default {
 }
 </script>
 
-<style> * { box-sizing: border-box; margin: 0; padding: 0;} </style>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0;}
+    body { background: #E5E5E5; }
+</style>
 <style lang="sass" scoped>
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap')
 
 $graphite: #3F3F3F
 $white: #FFFEFB
 $gray: #B4B4B4
-$pink: #ff8484 
+$pink: #ff8484
+$red: #FF8484
+$green: #7BAE73
 
 $boxshadowheader: 0px 2px 5px rgba(0, 0, 0, 0.1)
 $fontfamily: 'Source Sans Pro'
 
 .not_valid-form
-    border: 2px solid #FF8484
+    border: 2px solid $red
     transition: .7s
     margin-bottom: 20px
 .not_valid-form-txt
-    color: #FF8484
+    color: $red
     transition: .7s
     position: absolute
     top: 57px
@@ -226,13 +230,13 @@ $fontfamily: 'Source Sans Pro'
     font-family: $fontfamily
     color: $graphite
     transition: .5s
-    margin-top: 32px
+    padding: 32px 32px 0px 32px
 
     .header--container
         display: flex
         justify-content: space-between
         align-items: center
-        margin-bottom: 16px 
+        margin-bottom: 16px
         .header--title
             font-weight: 600
             font-size: 28px
@@ -254,6 +258,9 @@ $fontfamily: 'Source Sans Pro'
                 color: $gray
                 cursor: pointer
                 font-family: $fontfamily
+                font-weight: 400
+                font-size: 12px
+                line-height: 15px
             .header--nav-btn:hover
                 border-bottom: 1px solid $pink
             .header--nav-btn::after
@@ -271,10 +278,8 @@ $fontfamily: 'Source Sans Pro'
                 z-index: 2
                 .header--navigation-btn
                     cursor: pointer
-                .header--navigation-btn:hover::before
-                    content: ' - '
+                .header--navigation-btn:hover
                     color: $pink
-                    cursor: pointer
 
     .body--container
         display: flex
@@ -283,26 +288,33 @@ $fontfamily: 'Source Sans Pro'
             box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02)
             border-radius: 4px
             padding: 24px
-            // max-height: 440px
-            max-height: 460px
-            min-width: 332px
+            height: 440px
+            width: 332px
+            font-style: normal
+            font-weight: 400
+            font-size: 10px
+            line-height: 13px
+            letter-spacing: -0.02em
             .form--input
                 position: relative
                 .required::after
                     content: url('@/assets/required.svg')
                     position: absolute
-                    top: -10px
+                    top: -8px
         .cards--container
             display: flex
             flex-wrap: wrap
+            width: 1028px
+            margin: 0px 0px 0px 16px
+            grid-column-gap: 16px
             .card--container
-                background: #FFFEFB
+                background: $white
                 box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02)
                 border-radius: 4px
-                min-width: 332px
+                width: 332px
                 height: 423px
                 position: relative
-                margin: 0px 0px 16px 16px
+                margin: 0px 0px 16px 0px
                 .card_delete
                     position: absolute
                     cursor: pointer
@@ -324,14 +336,14 @@ $fontfamily: 'Source Sans Pro'
                     font-weight: 600
                     font-size: 20px
                     line-height: 25px
-                    color: #3F3F3F
+                    color: $graphite
                 .card--data p:nth-child(2)
                     margin-top: 16px
                     font-style: normal
                     font-weight: 400
                     font-size: 16px
                     line-height: 20px
-                    color: #3F3F3F
+                    color: $graphite
                 .card--data p:nth-child(3)
                     position: absolute
                     bottom: 16px
@@ -339,13 +351,13 @@ $fontfamily: 'Source Sans Pro'
                     font-weight: 600
                     font-size: 24px
                     line-height: 30px
-                    color: #3F3F3F
+                    color: $graphite
         .form--btn
             transition: .5s
-            width: 284px
+            width: 100%
             height: 36px
             border-radius: 10px
-            background: #7BAE73
+            background: $green
             border: none
             cursor: pointer
             color: $white
@@ -353,8 +365,6 @@ $fontfamily: 'Source Sans Pro'
             color: $graphite
         .form--btn:disabled
             transition: .5s
-            width: 284px
-            height: 36px
             border-radius: 10px
             background: #EEEEEE
             border: none
@@ -363,7 +373,7 @@ $fontfamily: 'Source Sans Pro'
 
 input
     border: none
-    background: #FFFEFB
+    background: $white
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1)
     border-radius: 4px
     width: 100%
@@ -375,7 +385,7 @@ input
     font-weight: 400
     font-size: 10px
     line-height: 13px
-    margin: 4px 0px 0px 0px
+    margin: 4px 0px 9px 0px
 input::-webkit-input-placeholder
     color: $gray
 input[type="number"]::-webkit-inner-spin-button 
@@ -383,7 +393,7 @@ input[type="number"]::-webkit-inner-spin-button
 
 textarea
     border: none
-    background: #FFFEFB
+    background: $white
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1)
     border-radius: 4px
     width: 100%
@@ -403,7 +413,7 @@ textarea::-webkit-input-placeholder
 .succes_add
     width: 300px
     height: 40px
-    background: #7BAE73
+    background: $green
     border-radius: 20px
     position: absolute
     top: 20px
@@ -427,7 +437,7 @@ textarea::-webkit-input-placeholder
     height: 100px
     border-radius: 50%
     border: 5px solid #f3f3f3
-    border-top: 5px solid #ff8484
+    border-top: 5px solid $pink
     animation-name: spin
     animation-duration: 1000ms
     animation-iteration-count: infinite
@@ -449,15 +459,25 @@ textarea::-webkit-input-placeholder
         transform: rotate(360deg)
 
 @media screen and (max-width: 425px)
+    .header--container
+        display: block !important
+    .header--nav-container
+        margin-top: 16px
     .body--container
         display: block !important
-        width: 100%
-        .form--container
-            width: 100%
-        .cards--container
-            margin-top: 40px
-            .card--container
-                width: 100%
-                .card--img
-                    min-width: 100%
+    .form--container
+        width: 100% !important
+        margin-bottom: 16px
+        height: 100% !important
+    .cards--container
+        width: 100% !important
+        margin: 0px !important
+    .card--container
+        margin: 0px !important
+        width: 100% !important
+        margin-bottom: 16px !important
+    .card--img
+        width: 100% !important
+
+
 </style>
