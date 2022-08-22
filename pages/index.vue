@@ -134,7 +134,7 @@ export default {
     },
     mounted() {
         console.clear()
-        const parse = JSON.parse(localStorage.getItem('cards'))
+        const parse = JSON.parse(localStorage.getItem('cards') || '[]')
         if (parse !== null) {
             this.data_cards = parse
         }
