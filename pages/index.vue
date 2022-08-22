@@ -77,8 +77,10 @@
                     <img :src="i.img" class="card--img">
                     <div class="card--data">
                         <p>{{i.title}}</p>
-                        <p>{{i.about}}</p>
-                        <p>{{i.price}} руб.</p> 
+                        <div class="card--data-about">
+                            <p>{{i.about}}</p>
+                        </div>
+                        <p>{{maskPrice(i.price)}}</p>
                     </div>
                 </div>
             </div>
@@ -143,6 +145,9 @@ export default {
         this.succes_add = 'succes_add-hidden'
     },
     methods: {
+        maskPrice(val) {
+            return val.replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, '$& ')
+        },
         addCard() {
             const data = {
                 id: Math.floor(Math.random() * 9999),
@@ -155,7 +160,6 @@ export default {
             if (!data.img.match(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/i)) {
                 data.img = 'https://www.kerstinbruns.es/wp-content/themes/realestate-7/images/no-image.png'
             }
-            data.price = data.price.replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, '$& ')
 
             this.data_cards.push(data)
             localStorage.setItem('cards', JSON.stringify(this.data_cards))
@@ -331,6 +335,8 @@ $fontfamily: 'Source Sans Pro'
                     border-radius: 4px 4px 0px 0px
                 .card--data
                     padding: 16px
+                    .card--data-about
+                        margin-top: 16px
                 .card--data p:nth-child(1)
                     font-style: normal
                     font-weight: 600
@@ -478,6 +484,18 @@ textarea::-webkit-input-placeholder
         margin-bottom: 16px !important
     .card--img
         width: 100% !important
-
+    .spin
+        top: 40%
+        right: 60%
+        left: 40%
+        bottom: 0
+    .header--nav-container-btn
+        left: 0px !important
+        top: -80px !important
+    .succes_add
+        top: 5%
+        right: 85%
+        left: 15%
+        bottom: 0
 
 </style>
